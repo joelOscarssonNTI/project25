@@ -1,0 +1,29 @@
+h1 = @post['Title']
+p
+  | Published on: #{ @post['PublicationDate'] }
+p
+  | #{ @post['Content'] }
+
+h2 Likes
+- if @likes.empty?
+  p No likes yet.
+- else
+  ul
+    - @likes.each do |like|
+      li
+        | Like by User ##{like['UserID']} at #{like['Timestamp']}:
+        |  #{like['Content']}
+
+- if logged_in?
+  h3 Add Your Like
+  form action="/posts/#{@post['PostID']}/like" method="post"
+    p
+      label for="content" Comment (optional):
+      input type="text" name="content"
+    p
+      input type="submit" value="Like"
+- else
+  p
+    | Please 
+    a href="/login" Login
+    |  to like this post.
