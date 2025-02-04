@@ -1,0 +1,19 @@
+/ I new_post.slim
+form action="/create" method="post"
+  div
+    label for="title" Title:
+    input type="text" name="title" id="title"
+  div
+    label for="content" Content:
+    textarea name="content" id="content"
+  div
+    label for="ingredients" Ingredients:
+    textarea name="ingredients" id="ingredients"
+  div
+    label for="instructions" Instructions:
+    textarea name="instructions" id="instructions"
+  div
+    label for="image_path" Image URL:
+    input type="text" name="image_path" id="image_path"
+  div
+    button type="submit" Create Post

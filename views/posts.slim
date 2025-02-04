@@ -1,0 +1,20 @@
+h1 Receptinlägg
+
+ul
+  - if posts.empty?
+    li Inga inlägg att visa
+  - else
+    - posts.each do |post|
+      li
+        h2= post['title']
+        p= post['content']
+        p
+          strong Ingredienser:
+          | #{post['ingredients']}
+        p
+          strong Instruktioner:
+          | #{post['instructions']}
+        - if post['image_path']
+          img src=post['image_path'] alt="Bild för #{post['title']}"
+
+a href="/new_post" Skapa nytt inlägg
