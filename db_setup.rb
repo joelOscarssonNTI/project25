@@ -1,0 +1,47 @@
+require 'sqlite3'
+
+DB = SQLite3::Database.new "blog.db"
+
+DB.execute <<-SQL
+CREATE TABLE IF NOT EXISTS User (
+    UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT UNIQUE,
+    Password TEXT,
+    pwdigest TEXT
+);
+SQL
+
+DB.execute <<-SQL
+CREATE TABLE IF NOT EXISTS Post (
+    PostID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title TEXT,
+    Content TEXT,
+    PublicationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+SQL
+
+DB.execute <<-SQL
+CREATE TABLE IF NOT EXISTS "Like" (
+    LikeID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PostID INTEGER,
+    UserID INTEGER,
+    Content TEXT,
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(PostID) REFERENCES Post(PostID),
+    FOREIGN KEY(UserID) REFERENCES User(UserID)
+);
+SQL
+
+DB.execute <<-SQL
+CREATE TABLE IF NOT EXISTS Interaction (
+    InteractionID INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserID INTEGER,
+    PostID INTEGER,
+    Type TEXT,
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(PostID) REFERENCES Post(PostID),
+    FOREIGN KEY(UserID) REFERENCES User(UserID)
+);
+SQL
+
+puts "Database initialized successfully!"

@@ -1,0 +1,10 @@
+h1 All Posts
+
+- if @posts.empty?
+  p No posts found.
+- else
+  ul
+    - @posts.each do |post|
+      li
+        a href="/posts/#{post['PostID']}" = post['Title']
+        |  – Published on #{post['PublicationDate']}
