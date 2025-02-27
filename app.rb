@@ -28,18 +28,24 @@ get '/signup' do
   slim :signup
 end
 
+
 post '/signup' do
   username = params[:username]
   password = params[:password]
   pwdigest = BCrypt::Password.create(password)
-  
-  begin
+  existing_user = DB.execute("SELECT * FROM User WHERE Username = ?", [username]).first
+
+  if existing_user.nil?
     DB.execute("INSERT INTO User (Username, Password, pwdigest) VALUES (?, ?, ?)", [username, password, pwdigest])
     redirect '/login'
-  rescue SQLite3::Exception
+  else
     @error = "Username already taken or invalid input."
     slim :signup
   end
+end
+
+get '/login' do
+  slim :login
 end
 
 get '/login' do
