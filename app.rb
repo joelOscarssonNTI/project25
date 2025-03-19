@@ -86,14 +86,16 @@ end
 
 get '/posts/:id' do
   @post = DB.execute("SELECT * FROM Post WHERE PostID = ?", [params[:id]]).first
-  @likes = DB.execute("SELECT * FROM Like WHERE PostID = ?", [params[:id]])
+  @likes = DB.execute("SELECT Like.*, User.Username FROM Like JOIN User ON Like.UserID = User.UserID WHERE PostID = ?", [params[:id]])
   slim :post_detail
 end
 
 post '/posts/:id/like' do
   redirect '/login' unless logged_in?
-  content = params[:content] || ""
-  DB.execute("INSERT INTO Like (PostID, UserID, Content, Timestamp) VALUES (?, ?, ?, datetime('now'))", [params[:id], session[:user_id], content])
-  DB.execute("INSERT INTO Interaction (UserID, PostID, Type, Timestamp) VALUES (?, ?, 'like', datetime('now'))", [session[:user_id], params[:id]])
+  existing_like = DB.execute("SELECT * FROM Like WHERE PostID = ? AND UserID = ?", [params[:id], session[:user_id]]).first
+  if existing_like.nil?
+    DB.execute("INSERT INTO Like (PostID, UserID, Content, Timestamp) VALUES (?, ?, ?, datetime('now'))", [params[:id], session[:user_id], params[:content]])
+    DB.execute("INSERT INTO Interaction (UserID, PostID, Type, Timestamp) VALUES (?, ?, 'like', datetime('now'))", [session[:user_id], params[:id]])
+  end
   redirect "/posts/#{params[:id]}"
 end

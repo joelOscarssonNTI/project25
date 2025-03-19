@@ -11,7 +11,7 @@ h2 Likes
   ul
     - @likes.each do |like|
       li
-        | Like by User ##{like['UserID']} at #{like['Timestamp']}:
+        | Like by User ##{like['Username']} at #{like['Timestamp']}:
         |  #{like['Content']}
 
 - if logged_in?
