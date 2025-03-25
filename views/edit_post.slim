@@ -1,0 +1,9 @@
+form action="/posts/#{@post['PostID']}/update" method="post"
+  label for="title" Titel:
+  input type="text" name="title" value=@post['Title']
+  
+  label for="content" Innehåll:
+  textarea name="content"
+    = @post['Content']
+  
+  input type="submit" value="Uppdatera inlägg"

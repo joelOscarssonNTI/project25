@@ -27,3 +27,8 @@ h2 Likes
     | Please 
     a href="/login" Login
     |  to like this post.
+
+- if logged_in? && @post["UserID"] == session[:user_id]
+  a href="/posts/#{@post["PostID"]}/edit" Redigera
+  form action="/posts/#{@post["PostID"]}/delete" method="post"
+    button type="submit" Ta bort
