@@ -30,11 +30,11 @@ end
 
 get '/' do
   @posts = DB.execute("SELECT Post.*, User.Username FROM Post JOIN User ON Post.UserID = User.UserID ORDER BY PublicationDate DESC")
-  slim :index
+  slim :"posts/index"
 end
 
 get '/signup' do
-  slim :signup
+  slim :"users/signup"
 end
 
 post '/signup' do
@@ -48,12 +48,12 @@ post '/signup' do
     redirect '/login'
   else
     @error = "Username already taken or invalid input."
-    slim :signup
+    slim :"users/signup"
   end
 end
 
 get '/login' do
-  slim :login
+  slim :"users/login"
 end
 
 post '/login' do
@@ -66,7 +66,7 @@ post '/login' do
     redirect '/'
   else
     @error = "Invalid credentials."
-    slim :login
+    slim :"users/login"
   end
 end
 
@@ -77,7 +77,7 @@ end
 
 get '/posts/new' do
   redirect '/login' unless logged_in?
-  slim :new_post
+  slim :"posts/new"
 end
 
 post '/posts' do
@@ -91,7 +91,7 @@ end
 get '/posts/:id' do
   @post = DB.execute("SELECT Post.*, User.Username FROM Post JOIN User ON Post.UserID = User.UserID WHERE PostID = ?", [params[:id]]).first
   @likes = DB.execute("SELECT Like.*, User.Username FROM Like JOIN User ON Like.UserID = User.UserID WHERE PostID = ?", [params[:id]])
-  slim :post_detail
+  slim :"posts/show"
 end
 
 post '/posts/:id/like' do
@@ -108,7 +108,7 @@ get '/posts/:id/edit' do
   redirect '/login' unless logged_in?
   redirect '/error' unless owns_post?(params[:id])
   @post = DB.execute("SELECT * FROM Post WHERE PostID = ?", [params[:id]]).first
-  slim :edit_post
+  slim :"posts/edit"
 end
 
 post '/posts/:id/update' do
